@@ -3,6 +3,9 @@
 from flask import Flask, jsonify, request, send_file
 import signal, sys
 
+from PIL import Image
+from StringIO import StringIO
+
 import rospy
 from std_msgs.msg import String
 
@@ -11,15 +14,24 @@ pub = rospy.Publisher('chatter', String, queue_size=10)
 rospy.init_node('talker', anonymous=True)
 rospy.loginfo("ros node initialized")
 
-inv = [{"name":"Water", "quantity":10}, {"name":"Granola", "quantity":5}]
+MAP_FILE = "/home/avengineer//alfred_ws/ros_alfred/src/alfred_maps/maps/uta_basement.pgm"
+inventory = {"Water":10, "Granola":5}
 rooms = ["living room", "kitchen", "dining room"]
+
+def serve_pil_image(pil_img):
+    img_io = StringIO()
+    pil_img.save(img_io, 'PNG')
+    img_io.seek(0)
+    return send_file(img_io, mimetype='image/png')
 
 @app.route("/map")
 def show_map():
-    return send_file("static/map.png")
+    im = Image.open(MAP_FILE)
+    return serve_pil_image(im)
 
 @app.route("/sync")
-def inventory():
+def sync():
+    inv = [{"name":k, "quantity":v} for k,v in inventory.items() if v > 0]
     return jsonify({"inv":inv,"map":rooms})
 
 @app.route("/deliver", methods=['POST'])
@@ -27,22 +39,22 @@ def items():
     item = request.json.get('item')
     loc = request.json.get('location')
 
-    #if loc == None:
-    #    return jsonify({"error": "Parameter 'location' is required"})
+    if loc == None:
+        return jsonify({"error": "Parameter 'location' is required"})
 
-    #if not(loc in rooms):
-    #    return jsonify({"error": "Not a valid location"})
+    if not(loc in rooms):
+        return jsonify({"error": "Not a valid location"})
 
-    #if not(item in inv):
-    #    return jsonify({"error": "Not a valid item"})
+    if not(item in inventory):
+        return jsonify({"error": "Not a valid item"})
 
     # dispense item at loc
     msg = "{}:{}".format(item, loc)
     rospy.loginfo(msg)
     pub.publish(msg)
 
-    inv[item] -= 1
-    return jsonify({"name":item, "quantity":inv[item]})
+    inventory[item] -= 1
+    return jsonify({"name":item, "quantity":inventory[item]})
 
 def signal_handler(signal, frame):
     sys.exit(0)
