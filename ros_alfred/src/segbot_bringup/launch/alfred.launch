@@ -12,7 +12,7 @@
   </include>
 
   <!-- launch the hokuyo sensor -->
-  <include file="$(find segbot_sensors)/launch/hokuyo/eth_hokuyo.launch">
+  <include file="$(find segbot_sensors)/launch/hokuyo/hokuyo.launch">
     <arg name="name" value="nav_hokuyo" />
     <arg name="tf_prefix" value="$(arg tf_prefix)" />
     <!-- already published by urdf -->
@@ -27,7 +27,7 @@
 
   <!-- Arduino -->
   <include file="$(find segbot_sensors)/launch/arduino/arduino.launch">
-    <arg name="port" value="/dev/ttyACM0" />
+    <arg name="port" value="/dev/ttyACM1" />
     <arg name="tf_prefix" value="$(arg tf_prefix)" />
   </include>
 

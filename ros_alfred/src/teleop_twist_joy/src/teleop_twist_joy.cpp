@@ -150,6 +150,7 @@ namespace teleop_twist_joy
     else if (joy_msg->buttons[angular_increase_button])
     {
       move_bindings_map[left_button] = move_bindings_map[left_button] + increase_speed;
+      move_bindings_map[right_button] = move_bindings_map[right_button] - decrease_speed;
     }
     else if (joy_msg->buttons[angular_decrease_button])
     {
