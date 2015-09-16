@@ -8,6 +8,8 @@ scale_angular: 0.4
 #Start speeds for ALFRED
 linear_start_speed: 0.5
 angular_start_speed: 0.25
+decrease_speed: 0.01
+increase_speed: 0.01
 
 
 enable_button: 13  # L2 shoulder button

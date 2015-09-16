@@ -12,6 +12,8 @@ alias alfred_ws='cd /home/avengineer/alfred_ws'
 alias alfred_src='cd /home/avengineer/alfred_ws/ros_alfred/src'
 alias alfred_ros='cd /home/avengineer/alfred_ws/ros_alfred'
 
+alias alfred_joystick='roslaunch teleop_twist_joy teleop.launch'
+alias alfred_keyboard='rosrun teleop_twist_keyboard  teleop_twist_keyboard.py'
 alias alfred_bring_up='roslaunch segbot_bringup alfred.launch'
 alias alfred_map='roslaunch segbot_navigation alfred_with_mapping.launch'
 alias alfred_navigation='roslaunch segbot_navigation alfred_navigation.launch'
