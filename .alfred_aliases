@@ -1,0 +1,18 @@
+echo "...sourcing .alfred_aliases"
+alias src='source ~/.bashrc'
+alias gvim="gvim 2>/dev/null"
+alias rm='rm -i'
+alias vi='gvim'
+alias ..='cd ../'
+alias ..2='cd ../../'
+alias ..3='cd ../../../'
+alias ..4='cd ../../../../'
+
+alias alfred_ws='cd /home/avengineer/alfred_ws'
+alias alfred_src='cd /home/avengineer/alfred_ws/ros_alfred/src'
+alias alfred_ros='cd /home/avengineer/alfred_ws/ros_alfred'
+
+alias alfred_bring_up='roslaunch segbot_bringup alfred.launch'
+alias alfred_map='roslaunch segbot_navigation alfred_with_mapping.launch'
+alias alfred_navigation='roslaunch segbot_navigation alfred_navigation.launch'
+

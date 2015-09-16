@@ -1,0 +1,45 @@
+<launch>
+
+  <!-- set the tf prefix as necessary -->
+  <arg name="tf_prefix" default="" />
+  <arg name="device_id" default="#1" />
+  <param name="tf_prefix" value="$(arg tf_prefix)" />
+
+  <!-- launch the segway base -->
+  <include file="$(find segbot_bringup)/launch/alfred_base.launch">
+    <arg name="robot_frame_id" value="$(arg tf_prefix)/base_footprint" />
+    <arg name="odom_frame_id" value="$(arg tf_prefix)/odom" />
+  </include>
+
+  <!-- launch the hokuyo sensor -->
+  <include file="$(find segbot_sensors)/launch/hokuyo/eth_hokuyo.launch">
+    <arg name="name" value="nav_hokuyo" />
+    <arg name="tf_prefix" value="$(arg tf_prefix)" />
+    <!-- already published by urdf -->
+    <arg name="publish_tf" value="false" />   
+  </include>
+
+  <!-- COMMON aux information -->
+  <include file="$(find segbot_bringup)/launch/includes/auxiliary.alfred.launch.xml">
+    <arg name="tf_prefix" default="$(arg tf_prefix)" />
+    <arg name="use_registered_topic" default="true" />
+  </include>
+
+  <!-- Arduino -->
+  <include file="$(find segbot_sensors)/launch/arduino/arduino.launch">
+    <arg name="port" value="/dev/ttyACM0" />
+    <arg name="tf_prefix" value="$(arg tf_prefix)" />
+  </include>
+
+  <!-- launch the kinect sensor in laserscan configuration
+  <include file="$(find segbot_sensors)/launch/kinect/kinect.launch">
+    <arg name="name" value="nav_kinect" />
+    <arg name="tf_prefix" value="$(arg tf_prefix)" />
+    <arg name="device_id" value="$(arg device_id)" />
+    <arg name="depth_only" value="false" />
+  </include> 
+   Diagnostics and battery monitor 
+  <include file="$(find segbot_sensors)/launch/diagnostic/diagnostics.launch"/>
+  -->
+
+</launch>

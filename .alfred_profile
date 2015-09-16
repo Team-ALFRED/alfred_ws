@@ -1,0 +1,12 @@
+echo "...sourcing .alfred_profile"
+source ~/alfred_ws/.alfred_aliases
+echo "...sourcing setup.bash ros"
+source /opt/ros/indigo/setup.bash
+echo "...sourcing setup.bash alfred_ws"
+source ~/alfred_ws/ros_alfred/devel/setup.bash
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:/home/avengineer/alfred_ws/ros_alfred/src
+export PATH=$PATH:/home/avengineer/alfred_ws/scripts_alfred
+
+export ALFRED_ROS=/home/avengineer/alfred_ws/ros_alfred
+export ALFRED_WS=/home/avengineer/alfred_ws
+export ALFRED_SRC=/home/avengineer/alfred_ws/ros_alfred/src
