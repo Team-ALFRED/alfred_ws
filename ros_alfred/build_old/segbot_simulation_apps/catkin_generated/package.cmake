@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "segbot_simulation_apps")
+set(segbot_simulation_apps_MAINTAINER "Piyush Khandelwal <piyushk@gmail.com>, Jack O'Quin <jack.oquin@gmail.com>")
+set(segbot_simulation_apps_DEPRECATED "")
+set(segbot_simulation_apps_VERSION "0.3.3")
+set(segbot_simulation_apps_BUILD_DEPENDS "boost" "bwi_msgs" "bwi_planning_common" "bwi_tools" "gazebo_msgs" "geometry_msgs" "multi_level_map_msgs" "roscpp" "std_msgs" "tf" "roslaunch")
+set(segbot_simulation_apps_RUN_DEPENDS "boost" "bwi_msgs" "bwi_planning_common" "bwi_tools" "gazebo_msgs" "geometry_msgs" "multi_level_map_msgs" "roscpp" "std_msgs" "tf")
+set(segbot_simulation_apps_BUILDTOOL_DEPENDS "catkin")

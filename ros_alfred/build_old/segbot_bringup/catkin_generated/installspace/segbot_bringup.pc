@@ -1,0 +1,8 @@
+prefix=/home/avengineer/alfred_ws/ros_alfred/install
+
+Name: segbot_bringup
+Description: Description of segbot_bringup
+Version: 0.3.3
+Cflags: 
+Libs: -L/home/avengineer/alfred_ws/ros_alfred/install/lib 
+Requires: 

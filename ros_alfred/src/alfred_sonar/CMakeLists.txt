@@ -122,22 +122,20 @@ include_directories(
 #   src/${PROJECT_NAME}/alfred_sonar.cpp
 # )
 
+## Declare a C++ executable
+ add_executable(sonar_node src/sonar_node.cpp)
+
+## Specify libraries to link a library or executable target against
+ target_link_libraries(sonar_node ${catkin_LIBRARIES})
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(alfred_sonar ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-## Declare a C++ executable
-# add_executable(alfred_sonar_node src/alfred_sonar_node.cpp)
+ add_dependencies(sonar_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(alfred_sonar_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-## Specify libraries to link a library or executable target against
-# target_link_libraries(alfred_sonar_node
-#   ${catkin_LIBRARIES}
-# )
+ add_dependencies(sonar_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 #############
 ## Install ##

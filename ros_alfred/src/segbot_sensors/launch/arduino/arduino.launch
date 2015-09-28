@@ -2,9 +2,9 @@
 
   <!-- Launch nodes for using Arduino-attached sensors. -->
 
-  <arg name="baud" default="115200" />
+  <arg name="baud" default="57600" />
   <arg name="frame_id" default="sensor_plate_link" />
-  <arg name="port" default="/dev/ttyACM0" />
+  <arg name="port" default="/dev/ttyACM1" />
   <arg name="tf_prefix" default="" /> 
 
   <param name="tf_prefix" value="$(arg tf_prefix)" />

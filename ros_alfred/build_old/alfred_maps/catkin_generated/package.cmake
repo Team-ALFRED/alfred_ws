@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "alfred_maps")
+set(alfred_maps_MAINTAINER "avengineer <avengineer@todo.todo>")
+set(alfred_maps_DEPRECATED "")
+set(alfred_maps_VERSION "0.0.0")
+set(alfred_maps_BUILD_DEPENDS "map_server")
+set(alfred_maps_RUN_DEPENDS "map_server")
+set(alfred_maps_BUILDTOOL_DEPENDS "catkin")

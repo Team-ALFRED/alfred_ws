@@ -1,0 +1,8 @@
+prefix=/home/avengineer/alfred_ws/ros_alfred/install
+
+Name: segbot_navigation
+Description: Description of segbot_navigation
+Version: 0.3.3
+Cflags: 
+Libs: -L/home/avengineer/alfred_ws/ros_alfred/install/lib 
+Requires: bwi_interruptable_action_server geometry_msgs move_base_msgs nav_msgs std_srvs

@@ -1,0 +1,3 @@
+<launch>
+  <node name="sonar_node" pkg="alfred_sonar" type="sonar_node" />
+</launch>

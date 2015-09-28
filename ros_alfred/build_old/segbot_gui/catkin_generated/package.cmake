@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "segbot_gui")
+set(segbot_gui_MAINTAINER "Piyush Khandelwal <piyushk@gmail.com>, Jack O'Quin <jack.oquin@gmail.com>")
+set(segbot_gui_DEPRECATED "")
+set(segbot_gui_VERSION "0.3.3")
+set(segbot_gui_BUILD_DEPENDS )
+set(segbot_gui_RUN_DEPENDS "bwi_msgs" "python_qt_binding" "qt_gui" "rospy" "rqt_gui" "rqt_gui_py")
+set(segbot_gui_BUILDTOOL_DEPENDS "catkin")

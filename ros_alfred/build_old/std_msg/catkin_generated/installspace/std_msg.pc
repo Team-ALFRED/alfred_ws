@@ -1,0 +1,8 @@
+prefix=/home/avengineer/alfred_ws/ros_alfred/install
+
+Name: std_msg
+Description: Description of std_msg
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/avengineer/alfred_ws/ros_alfred/install/lib 
+Requires: 

@@ -46,7 +46,7 @@
 
 // include each device from a separate "Arduino library"
 #include "sonar.h"
-#include "voltmeter.h"
+//#include "voltmeter.h"
 //#include "imu.h"                        // ignore IMU
 
 // Ugly hacks needed to circumvent Arduino build silliness:

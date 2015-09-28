@@ -1,0 +1,8 @@
+prefix=/home/avengineer/alfred_ws/ros_alfred/install
+
+Name: segbot_gazebo
+Description: Description of segbot_gazebo
+Version: 0.3.3
+Cflags: 
+Libs: -L/home/avengineer/alfred_ws/ros_alfred/install/lib 
+Requires: 

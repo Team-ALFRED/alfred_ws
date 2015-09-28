@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "segbot_logical_translator")
+set(segbot_logical_translator_MAINTAINER "Piyush Khandelwal <piyushk@gmail.com>, Jack O'Quin <jack.oquin@gmail.com>")
+set(segbot_logical_translator_DEPRECATED "")
+set(segbot_logical_translator_VERSION "0.3.3")
+set(segbot_logical_translator_BUILD_DEPENDS "actionlib" "bwi_mapper" "bwi_msgs" "bwi_planning_common" "map_msgs" "message_filters" "move_base_msgs" "multi_level_map_msgs" "multi_level_map_utils" "nav_msgs" "roscpp" "tf")
+set(segbot_logical_translator_RUN_DEPENDS "actionlib" "bwi_mapper" "bwi_msgs" "bwi_planning_common" "map_msgs" "message_filters" "move_base_msgs" "multi_level_map_msgs" "multi_level_map_utils" "nav_msgs" "roscpp" "segbot_navigation" "tf" "utexas_gdc")
+set(segbot_logical_translator_BUILDTOOL_DEPENDS "catkin")

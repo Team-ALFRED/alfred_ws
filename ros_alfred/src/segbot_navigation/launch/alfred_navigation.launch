@@ -1,6 +1,6 @@
 <launch>
 
-  <arg name="map_file" default="$(find alfred_maps)/maps/uta_basement.yaml" />
+  <arg name="map_file" default="$(find alfred_maps)/pharos_lab/pharos_lab.yaml" />
   <arg name="robot_configuration" default="$(find segbot_bringup)/launch/alfred.launch"/>
 
   <include file="$(arg robot_configuration)" />
