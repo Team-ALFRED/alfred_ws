@@ -35,7 +35,7 @@ namespace teleop_twist_joy
 {
   //Usage message
   const char *text =
-  "\nPS3 CONTROLS FOR ALFRED\n"
+  "\nXBOX CONTROLS FOR ALFRED\n"
   "------------------------\n"
   "D-Pad Controls Movement:\n"
   "        [Forw]\n"
@@ -44,11 +44,11 @@ namespace teleop_twist_joy
   "\n"
   "        [Back]\n"
   "------------------------\n"
-  "Triangle : Increase Linear Speed\n"
-  "X        : Decrease Linear Speed\n"
-  "Square   : Increase Angular Speed\n"
-  "Circle   : Decrease Angular Speed\n"
-  "Start    : Help\n"
+  "Y     : Increase Linear Speed\n"
+  "A     : Decrease Linear Speed\n"
+  "X     : Increase Angular Speed\n"
+  "B     : Decrease Angular Speed\n"
+  "Start : Help\n"
   "------------------------\n"
   "Anything Else : Stop\n"
   "------------------------\n" 
@@ -158,22 +158,34 @@ namespace teleop_twist_joy
       move_bindings_map[left_button] = move_bindings_map[left_button] - decrease_speed;
     }
     //move forward
-    else if (joy_msg->buttons[forward_button]) 
+    else if (joy_msg->buttons[forward_button] && !joy_msg->buttons[right_button] && !joy_msg->buttons[left_button]) 
     {
       cmd_vel_msg.linear.x = move_bindings_map[forward_button];   
     }  
+    //move forward and turn right
+    else if (joy_msg->buttons[forward_button] && joy_msg->buttons[right_button]) 
+    {
+      cmd_vel_msg.linear.x = move_bindings_map[forward_button];  
+      cmd_vel_msg.angular.z = move_bindings_map[right_button];
+    }
+    //move forward and turn left
+    else if (joy_msg->buttons[forward_button] && joy_msg->buttons[left_button]) 
+    {
+      cmd_vel_msg.linear.x = move_bindings_map[forward_button];  
+      cmd_vel_msg.angular.z = move_bindings_map[left_button];
+    }
     //move backwards
-    else if (joy_msg->buttons[backward_button]) 
+    else if (joy_msg->buttons[backward_button] && !joy_msg->buttons[right_button] && !joy_msg->buttons[left_button]) 
     {
       cmd_vel_msg.linear.x = move_bindings_map[backward_button];
     }
     //move left
-    else if (joy_msg->buttons[left_button]) 
+    else if (joy_msg->buttons[left_button] && !joy_msg->buttons[forward_button] && !joy_msg->buttons[backward_button]) 
     {
       cmd_vel_msg.angular.z = move_bindings_map[left_button];
     }
     //move right
-    else if (joy_msg->buttons[right_button]) 
+    else if (joy_msg->buttons[right_button] && !joy_msg->buttons[forward_button] && !joy_msg->buttons[backward_button]) 
     {
       cmd_vel_msg.angular.z = move_bindings_map[right_button];
     }

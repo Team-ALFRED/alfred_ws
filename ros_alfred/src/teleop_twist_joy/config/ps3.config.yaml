@@ -1,34 +1,23 @@
-axis_linear: 1
-scale_linear: 0.7
-scale_linear_turbo: 1.5
-
-axis_angular: 0
-scale_angular: 0.4
-
 #Start speeds for ALFRED
 linear_start_speed: 0.5
 angular_start_speed: 0.25
 decrease_speed: 0.01
 increase_speed: 0.01
 
-
-enable_button: 13  # L2 shoulder button
-enable_turbo_button: 14  # L1 shoulder button
-
 #D-pad controls
-left_button: 7
-right_button: 5
-forward_button: 4
-backward_button: 6
+left_button: 11
+right_button: 12
+forward_button: 13
+backward_button: 14
 
 #Start
-help_button: 3
-#Triangle
-linear_increase_button: 12
+help_button: 7
+#Y
+linear_increase_button: 3
+#A
+linear_decrease_button: 0
 #X
-linear_decrease_button: 14
-#Square
-angular_increase_button: 15
-#Circle
-angular_decrease_button: 13
+angular_increase_button: 2
+#B
+angular_decrease_button: 1
 
