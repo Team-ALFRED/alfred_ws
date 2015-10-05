@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "std_msg")
-set(std_msg_MAINTAINER "avengineer <avengineer@todo.todo>")
-set(std_msg_DEPRECATED "")
-set(std_msg_VERSION "0.0.0")
-set(std_msg_BUILD_DEPENDS )
-set(std_msg_RUN_DEPENDS )
-set(std_msg_BUILDTOOL_DEPENDS "catkin")

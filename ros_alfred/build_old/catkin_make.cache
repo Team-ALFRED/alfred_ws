@@ -1,2 +1,0 @@
-alfred_maps:alfred_server:alfred_sonar:joystick_drivers/joy:joystick_drivers/joystick_drivers:joystick_drivers/ps3joy:joystick_drivers/spacenav_node:joystick_drivers/wiimote:segbot:segbot_bringup:segbot_description:segbot_firmware:segbot_gazebo:segbot_gui:segbot_logical_translator:segbot_navigation:segbot_sensors:segbot_simulation_apps:simple_navigation_goals:teleop_twist_joy:teleop_twist_keyboard
--DCATKIN_DEVEL_PREFIX=/home/avengineer/alfred_ws/ros_alfred/devel -DCMAKE_INSTALL_PREFIX=/home/avengineer/alfred_ws/ros_alfred/install -G Unix Makefiles

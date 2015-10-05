@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "alfred_sonar")
-set(alfred_sonar_MAINTAINER "avengineer <avengineer@todo.todo>")
-set(alfred_sonar_DEPRECATED "")
-set(alfred_sonar_VERSION "0.0.0")
-set(alfred_sonar_BUILD_DEPENDS "roscpp" "rospy" "std_msgs")
-set(alfred_sonar_RUN_DEPENDS "roscpp" "rospy" "std_msgs")
-set(alfred_sonar_BUILDTOOL_DEPENDS "catkin")

@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "segbot_sensors")
-set(segbot_sensors_MAINTAINER "Piyush Khandelwal <piyushk@gmail.com>, Jack O'Quin <jack.oquin@gmail.com>")
-set(segbot_sensors_DEPRECATED "")
-set(segbot_sensors_VERSION "0.3.3")
-set(segbot_sensors_BUILD_DEPENDS "message_generation" "roslint" "diagnostic_msgs" "geometry_msgs" "laser_filters" "nodelet" "pcl_ros" "pluginlib" "roscpp" "sensor_msgs" "smart_battery_msgs" "std_msgs" "tf")
-set(segbot_sensors_RUN_DEPENDS "camera1394" "depthimage_to_laserscan" "diagnostic_aggregator" "filters" "freenect_launch" "hokuyo_node" "message_runtime" "openni_launch" "python-serial" "rospy" "rqt_robot_monitor" "rviz" "tf2_ros" "urg_node" "diagnostic_msgs" "geometry_msgs" "laser_filters" "nodelet" "pcl_ros" "pluginlib" "roscpp" "sensor_msgs" "smart_battery_msgs" "std_msgs" "tf")
-set(segbot_sensors_BUILDTOOL_DEPENDS "catkin")

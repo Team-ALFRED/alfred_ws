@@ -1,8 +1,0 @@
-prefix=/home/avengineer/alfred_ws/ros_alfred/install
-
-Name: segbot_sensors
-Description: Description of segbot_sensors
-Version: 0.3.3
-Cflags: -I/home/avengineer/alfred_ws/ros_alfred/install/include
-Libs: -L/home/avengineer/alfred_ws/ros_alfred/install/lib -lsegbot_sensors_filters -lrange_to_cloud
-Requires: diagnostic_msgs geometry_msgs laser_filters message_runtime nodelet pcl_ros sensor_msgs smart_battery_msgs std_msgs tf

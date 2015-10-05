@@ -1,2 +1,0 @@
-set(sonar_test_MESSAGE_FILES "msg/SegbotSensorsStatus.msg")
-set(sonar_test_SERVICE_FILES "")

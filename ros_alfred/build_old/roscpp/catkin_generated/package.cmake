@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "roscpp")
-set(roscpp_MAINTAINER "avengineer <avengineer@todo.todo>")
-set(roscpp_DEPRECATED "")
-set(roscpp_VERSION "0.0.0")
-set(roscpp_BUILD_DEPENDS )
-set(roscpp_RUN_DEPENDS )
-set(roscpp_BUILDTOOL_DEPENDS "catkin")

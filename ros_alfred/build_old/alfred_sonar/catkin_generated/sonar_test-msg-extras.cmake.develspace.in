@@ -1,2 +1,0 @@
-set(sonar_test_MESSAGE_FILES "/home/avengineer/alfred_ws/ros_alfred/src/alfred_sonar/msg/SegbotSensorsStatus.msg")
-set(sonar_test_SERVICE_FILES "")
