@@ -6,10 +6,10 @@
   <arg name="urdf_file"
        default="$(find segbot_description)/robots/segbot_v2.urdf.xacro" />
 
-  <!-- Kinect arguments
+  <!-- Kinect arguments -->
   <arg name="kinect_name" default="nav_kinect" />  
-  -->
- <!-- Kinect specific: launch the laserscan converter 
+ 
+ <!-- Kinect specific: launch the laserscan converter -->
   <include file="$(find segbot_sensors)/launch/kinect/kinect-laserscan.launch">
     <arg name="tf_prefix" value="$(arg tf_prefix)" />
     <arg name="camera" value="$(arg kinect_name)" />
@@ -18,7 +18,7 @@
     <arg name="min_height" value ="-0.5" />
     <arg name="max_height" value ="10.0" />
   </include>
-  -->
+  
 
   <!-- launch the appropriate urdf description, as well as the corresponding tf tree -->
   <param name="robot_description"
