@@ -3,7 +3,8 @@
 from actionlib.action_client import * 
 from move_base_msgs.msg import * 
 from alfred_server.msg import *
-import roslib; 
+import dispenser
+import roslib
 import rospy
 import smach
 import smach_ros
@@ -13,17 +14,6 @@ MOVEMENT_TIMEOUT = 300
 
 # move function
 def move(x, y):
-    width = 1984
-    height = 1984
-    resolution = 0.05
-
-    x -= width / 2
-    y -= height / 2
-    x -= ORIGIN[0] * resolution
-    y -= ORIGIN[1] * resolution
-    x *= resolution
-    y *= resolution
-
     ac = ActionClient('move_base', MoveBaseAction)
     ac.wait_for_server()
     rospy.loginfo("Got move_base client")
@@ -53,7 +43,7 @@ class SetGoal(smach.State):
     def execute(self, ud):
         rospy.loginfo('[SetGoal] goal = {} with item = {}'.format(ud.goal, ud.item))
 
-        move(*ud.goal)
+        move(0.0, 0.0)
         msg = rospy.wait_for_message("/move_base/result", MoveBaseActionResult, timeout=MOVEMENT_TIMEOUT)
 
         if msg.status.status == 3:
@@ -83,6 +73,7 @@ class Deliver(smach.State):
         msg = rospy.wait_for_message("/move_base/result", MoveBaseActionResult, timeout=MOVEMENT_TIMEOUT)
 
         if msg.status.status == 3:
+          rospy.sleep(5.0)
           return 'goal_reached'
         else:
           return 'error'
@@ -99,6 +90,7 @@ class Return(smach.State):
         if msg.status.status == 3:
           return 'goal_reached'
         else:
+          rospy.loginfo('Return] Could not return... giving up...')
           return 'error'
 
 def main():
@@ -114,7 +106,7 @@ def main():
         smach.StateMachine.add('SETGOAL',  SetGoal(),  {'error':'RETURN', 'goal_reached': 'DISPENSE'})
         smach.StateMachine.add('DISPENSE', Dispense(), {'error':'RETURN', 'dispensed':    'DELIVER'})
         smach.StateMachine.add('DELIVER',  Deliver(),  {'error':'RETURN', 'goal_reached': 'RETURN'})
-        smach.StateMachine.add('RETURN',   Return(),   {'error':'RETURN', 'goal_reached': 'IDLE'})
+        smach.StateMachine.add('RETURN',   Return(),   {'error':'IDLE',   'goal_reached': 'IDLE'})
 
     # Execute SMACH plan
     outcome = sm.execute()
