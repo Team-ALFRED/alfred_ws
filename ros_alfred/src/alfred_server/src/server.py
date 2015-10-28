@@ -1,6 +1,8 @@
 #!/usr/bin/python 
 
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, Response, jsonify, request, send_file
+from functools import wraps
+from alfred_config import *
 import signal, sys
 
 from PIL import Image
@@ -18,10 +20,18 @@ rospy.init_node('alfred_server')
 rospy.loginfo("ros node initialized")
 pub = rospy.Publisher('/alfred_server/set_goal', ItemRequest, queue_size=10)
 
-#MAP_FILE = "/home/avengineer/alfred_ws/ros_alfred/src/alfred_maps/pharos_lab/pharos_lab.pgm"
-MAP_FILE = "/home/avengineer/alfred_ws/ros_alfred/src/alfred_maps/maps/uta_basement.pgm"
-inventory = {"water":10, "granola":5}
-rooms = ["living room", "kitchen", "dining room"]
+MAP_FILE = "/home/avengineer/alfred_ws/ros_alfred/src/alfred_maps/pharos_lab/pharos_lab.pgm"
+inventory = DEFAULT_INV
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.headers.get('Authorization', 'None')
+        if auth != SECRET_TOKEN:
+            rospy.logwarn("Invalid secret token: " + auth)
+            return Response(status=401)
+        return f(*args, **kwargs)
+    return decorated
 
 def serve_pil_image(pil_img):
     img_io = StringIO()
@@ -31,16 +41,20 @@ def serve_pil_image(pil_img):
 
 @app.route("/map")
 def show_map():
+    rospy.loginfo("/map")
     im = Image.open(MAP_FILE)
     return serve_pil_image(im)
 
 @app.route("/sync")
 def sync():
+    rospy.loginfo("/sync")
     inv = [{"name":k, "quantity":v} for k,v in inventory.items() if v > 0]
-    return jsonify({"inv":inv,"map":rooms})
+    return jsonify({"inv":inv})
 
 @app.route("/deliver", methods=['POST'])
+@requires_auth
 def items():
+    rospy.loginfo("/deliver")
     item = request.json.get('item')
     loc = request.json.get('location')
 
@@ -59,7 +73,8 @@ def items():
     res = 0.05
     im = Image.open(MAP_FILE)
     x = (loc[0] - 0.5) * im.size[0] * res - 0.5
-    y = (loc[1] - 0.5) * im.size[1] * res - 1.5
+    y = (loc[1] - 0.5) * im.size[1] * res + 0.5
+    y = -y
 
     # dispense item at loc
     msg = ItemRequest()

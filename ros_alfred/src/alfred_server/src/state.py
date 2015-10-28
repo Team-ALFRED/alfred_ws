@@ -9,8 +9,18 @@ import rospy
 import smach
 import smach_ros
 
+from Queue import Queue
+import signal
+import os
+
 ORIGIN = [-50, -50]
 MOVEMENT_TIMEOUT = 300
+
+fifo = Queue()
+
+def set_goal_callback(msg):
+    rospy.loginfo("[Callback] Item request: [goal: {}, item: {}]".format(msg.goal, msg.item))
+    fifo.put(msg)
 
 # move function
 def move(x, y):
@@ -27,11 +37,14 @@ def move(x, y):
     ac.send_goal(goal)
     ac.wait_for_server()
 
+def speak(msg):
+  os.system('espeak -a 20 -s 120 "{}"'.format(msg))
+
 class Idle(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['set_goal', 'error'], output_keys = ['goal', 'item'])
     def execute(self, ud):
-        msg = rospy.wait_for_message("/alfred_server/set_goal", ItemRequest)
+        msg = fifo.get(block=True)
 
         ud.goal = msg.goal
         ud.item = msg.item
@@ -41,20 +54,22 @@ class SetGoal(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal', 'item'], output_keys = ['goal', 'item'])
     def execute(self, ud):
+        speak("ok boss")
         rospy.loginfo('[SetGoal] goal = {} with item = {}'.format(ud.goal, ud.item))
 
         move(0.0, 0.0)
         msg = rospy.wait_for_message("/move_base/result", MoveBaseActionResult, timeout=MOVEMENT_TIMEOUT)
 
         if msg.status.status == 3:
-          return 'goal_reached'
+            return 'goal_reached'
         else:
-          return 'error'
+            return 'error'
 
 class Dispense(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['dispensed', 'error'], input_keys = ['goal','item'], output_keys = ['goal'])
     def execute(self, ud):
+        speak("ordering your item")
         rospy.loginfo('[Dispense] goal = {} with item = {}'.format(ud.goal, ud.item))
 
         dispenser.req(ud.item)
@@ -67,6 +82,7 @@ class Deliver(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal'])
     def execute(self, ud):
+        speak("here I come")
         rospy.loginfo('[Deliver] goal = {}'.format(ud.goal))
 
         move(*ud.goal)
@@ -82,6 +98,7 @@ class Return(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['goal_reached', 'error'])
     def execute(self, ud):
+        speak("I'm going home!")
         rospy.loginfo('[Return] Going home...')
 
         move(0.0, 0.0)
@@ -95,9 +112,12 @@ class Return(smach.State):
 
 def main():
     rospy.init_node('smach_movement_machine')
+    rospy.Subscriber("/alfred_server/set_goal", ItemRequest, set_goal_callback)
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['succeeded'])
+    sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
+    sis.start()
 
     # Open the container
     with sm:
@@ -111,5 +131,10 @@ def main():
     # Execute SMACH plan
     outcome = sm.execute()
 
-if __name__ == '__main__':
+def signal_handler(signal, frame):
+    sys.exit(0)
+
+if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal_handler)
     main()
+
