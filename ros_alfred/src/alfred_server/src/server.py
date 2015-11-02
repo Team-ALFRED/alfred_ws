@@ -82,8 +82,17 @@ def items():
     msg.goal = [x, y]
     pub.publish(msg)
 
-    inventory[item] -= 1
-    return jsonify({"name":item, "quantity":inventory[item]})
+    msg = rospy.wait_for_message("/alfred_server/result", ItemResult, timeout=300)
+    if not(msg):
+      return jsonify({"error": "Internal server error"})
+
+    if msg.dispensed:
+      inventory[item] -= 1
+
+    if msg.error:
+      return jsonify({"error": msg.error})
+    else:
+      return jsonify({"name":item, "quantity":inventory[item]})
 
 def signal_handler(signal, frame):
     sys.exit(0)

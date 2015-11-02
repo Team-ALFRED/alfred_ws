@@ -17,6 +17,7 @@ ORIGIN = [-50, -50]
 MOVEMENT_TIMEOUT = 300
 
 fifo = Queue()
+pub = None
 
 def set_goal_callback(msg):
     rospy.loginfo("[Callback] Item request: [goal: {}, item: {}]".format(msg.goal, msg.item))
@@ -63,6 +64,10 @@ class SetGoal(smach.State):
         if msg.status.status == 3:
             return 'goal_reached'
         else:
+            res = ItemResult()
+            res.dispensed = 0
+            res.error = "Could not find valid delivery path"
+            pub.publish(res)
             return 'error'
 
 class Dispense(smach.State):
@@ -76,6 +81,10 @@ class Dispense(smach.State):
         if dispenser.ack():
           return 'dispensed'
         else:
+          res = ItemResult()
+          res.dispensed = 0
+          res.error = "Could not dispense item"
+          pub.publish(res)
           return 'error'
 
 class Deliver(smach.State):
@@ -89,9 +98,18 @@ class Deliver(smach.State):
         msg = rospy.wait_for_message("/move_base/result", MoveBaseActionResult, timeout=MOVEMENT_TIMEOUT)
 
         if msg.status.status == 3:
+          res = ItemResult()
+          res.dispensed = 1
+          res.error = ""
+          pub.publish(res)
+
           rospy.sleep(5.0)
           return 'goal_reached'
         else:
+          res = ItemResult()
+          res.dispensed = 1
+          res.error = "Could not find valid delivery path"
+          pub.publish(res)
           return 'error'
 
 class Return(smach.State):
@@ -111,8 +129,11 @@ class Return(smach.State):
           return 'error'
 
 def main():
+    global pub
+
     rospy.init_node('smach_movement_machine')
     rospy.Subscriber("/alfred_server/set_goal", ItemRequest, set_goal_callback)
+    pub = rospy.Publisher('/alfred_server/result', ItemResult, queue_size=10)
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['succeeded'])
