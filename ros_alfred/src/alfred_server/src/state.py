@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 from actionlib.action_client import * 
+from actionlib_msgs.msg import *
 from move_base_msgs.msg import * 
+from std_msgs.msg import *
 from alfred_server.msg import *
 import dispenser
 import roslib
@@ -19,9 +21,20 @@ MOVEMENT_TIMEOUT = 300
 fifo = Queue()
 pub = None
 
+# /move_base/result
+# 2 - goal cancelled
+# 3 - goal reached
+# 4 - no path found
+
 def set_goal_callback(msg):
-    rospy.loginfo("[Callback] Item request: [goal: {}, item: {}]".format(msg.goal, msg.item))
+    rospy.loginfo("[Callback] Item request: [goal:{}, item:{}, uid:{}]".format(msg.goal, msg.item, msg.uid))
     fifo.put(msg)
+
+def hard_stop_callback(msg):
+    rospy.loginfo("Get hard stop request: {}".format(msg))
+
+    hard_stop = rospy.Publisher('/move_base/cancel', GoalID, queue_size=10)
+    hard_stop.publish(GoalID())
 
 # move function
 def move(x, y):
@@ -43,20 +56,21 @@ def speak(msg):
 
 class Idle(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes = ['set_goal', 'error'], output_keys = ['goal', 'item'])
+        smach.State.__init__(self, outcomes = ['set_goal', 'error'], output_keys = ['goal', 'item', 'uid'])
     def execute(self, ud):
         msg = fifo.get(block=True)
 
         ud.goal = msg.goal
         ud.item = msg.item
+        ud.uid = msg.uid
         return 'set_goal'
 
 class SetGoal(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal', 'item'], output_keys = ['goal', 'item'])
+        smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal', 'item', 'uid'], output_keys = ['goal', 'item', 'uid'])
     def execute(self, ud):
         speak("ok boss")
-        rospy.loginfo('[SetGoal] goal = {} with item = {}'.format(ud.goal, ud.item))
+        rospy.loginfo('[SetGoal] goal:{}, item:{}, uid:{}'.format(ud.goal, ud.item, ud.uid))
 
         move(0.0, 0.0)
         msg = rospy.wait_for_message("/move_base/result", MoveBaseActionResult, timeout=MOVEMENT_TIMEOUT)
@@ -72,10 +86,10 @@ class SetGoal(smach.State):
 
 class Dispense(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes = ['dispensed', 'error'], input_keys = ['goal','item'], output_keys = ['goal'])
+        smach.State.__init__(self, outcomes = ['dispensed', 'error'], input_keys = ['goal','item', 'uid'], output_keys = ['goal', 'uid'])
     def execute(self, ud):
         speak("ordering your item")
-        rospy.loginfo('[Dispense] goal = {} with item = {}'.format(ud.goal, ud.item))
+        rospy.loginfo('[Dispense] goal:{}, item:{}, uid:{}'.format(ud.goal, ud.item, ud.uid))
 
         dispenser.req(ud.item)
         if dispenser.ack():
@@ -89,10 +103,10 @@ class Dispense(smach.State):
 
 class Deliver(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal'])
+        smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal', 'uid'])
     def execute(self, ud):
         speak("here I come")
-        rospy.loginfo('[Deliver] goal = {}'.format(ud.goal))
+        rospy.loginfo('[Deliver] goal:{}, uid:{}'.format(ud.goal, ud.uid))
 
         move(*ud.goal)
         msg = rospy.wait_for_message("/move_base/result", MoveBaseActionResult, timeout=MOVEMENT_TIMEOUT)
@@ -100,6 +114,7 @@ class Deliver(smach.State):
         if msg.status.status == 3:
           res = ItemResult()
           res.dispensed = 1
+          res.uid = ud.uid
           res.error = ""
           pub.publish(res)
 
@@ -108,6 +123,7 @@ class Deliver(smach.State):
         else:
           res = ItemResult()
           res.dispensed = 1
+          res.uid = ud.uid
           res.error = "Could not find valid delivery path"
           pub.publish(res)
           return 'error'
@@ -133,6 +149,7 @@ def main():
 
     rospy.init_node('smach_movement_machine')
     rospy.Subscriber("/alfred_server/set_goal", ItemRequest, set_goal_callback)
+    rospy.Subscriber("/alfred_server/hard_stop", String, hard_stop_callback)
     pub = rospy.Publisher('/alfred_server/result', ItemResult, queue_size=10)
 
     # Create a SMACH state machine
