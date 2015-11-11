@@ -12,6 +12,8 @@ import smach
 import smach_ros
 
 from Queue import Queue
+import subprocess
+import random
 import signal
 import os
 
@@ -52,24 +54,27 @@ def move(x, y):
     ac.wait_for_server()
 
 def speak(msg):
-  os.system('espeak -a 20 -s 120 "{}"'.format(msg))
+  subprocess.Popen(["espeak","-s","100","-v","mb-en1",msg])
 
 class Idle(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['set_goal', 'error'], output_keys = ['goal', 'item', 'uid'])
     def execute(self, ud):
         msg = fifo.get(block=True)
+        if random.randint(0, 20):
+          speak("twiddling my thumbs")
 
         ud.goal = msg.goal
         ud.item = msg.item
         ud.uid = msg.uid
         return 'set_goal'
 
+set_goal_phrases = ["as you wish", "I live to serve", "coming right up!", "beep boop, I am a robot", "computing... computing"]
 class SetGoal(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal', 'item', 'uid'], output_keys = ['goal', 'item', 'uid'])
     def execute(self, ud):
-        speak("ok boss")
+        speak(random.choice(set_goal_phrases))
         rospy.loginfo('[SetGoal] goal:{}, item:{}, uid:{}'.format(ud.goal, ud.item, ud.uid))
 
         move(0.0, 0.0)
@@ -86,9 +91,8 @@ class SetGoal(smach.State):
 
 class Dispense(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes = ['dispensed', 'error'], input_keys = ['goal','item', 'uid'], output_keys = ['goal', 'uid'])
+        smach.State.__init__(self, outcomes = ['dispensed', 'error'], input_keys = ['goal','item', 'uid'], output_keys = ['goal', 'item', 'uid'])
     def execute(self, ud):
-        speak("ordering your item")
         rospy.loginfo('[Dispense] goal:{}, item:{}, uid:{}'.format(ud.goal, ud.item, ud.uid))
 
         dispenser.req(ud.item)
@@ -101,17 +105,20 @@ class Dispense(smach.State):
           pub.publish(res)
           return 'error'
 
+deliver_phrase = ["here's your {}... enjoy", "I have your {}", "here's your {}, you're looking lovely today", "ahem, I accept tips"]
 class Deliver(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal', 'uid'])
+        smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal', 'item', 'uid'])
     def execute(self, ud):
-        speak("here I come")
         rospy.loginfo('[Deliver] goal:{}, uid:{}'.format(ud.goal, ud.uid))
 
         move(*ud.goal)
+        if random.randint(0, 20):
+          espeak("sir, the probablity of successfully delivering water... is three thousand seven hundred and twenty to one")
         msg = rospy.wait_for_message("/move_base/result", MoveBaseActionResult, timeout=MOVEMENT_TIMEOUT)
 
         if msg.status.status == 3:
+          speak(random.choice(deliver_phrase).format(ud.item))
           res = ItemResult()
           res.dispensed = 1
           res.uid = ud.uid
@@ -121,6 +128,7 @@ class Deliver(smach.State):
           rospy.sleep(5.0)
           return 'goal_reached'
         else:
+          speak("oh dear, I think I left the oven on")
           res = ItemResult()
           res.dispensed = 1
           res.uid = ud.uid
@@ -128,11 +136,12 @@ class Deliver(smach.State):
           pub.publish(res)
           return 'error'
 
+return_phrases = ["call me if you need me", "I'm heading home", "see ya later", "a sta la vista, baby"]
 class Return(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['goal_reached', 'error'])
     def execute(self, ud):
-        speak("I'm going home!")
+        speak(random.choice(return_phrases))
         rospy.loginfo('[Return] Going home...')
 
         move(0.0, 0.0)
