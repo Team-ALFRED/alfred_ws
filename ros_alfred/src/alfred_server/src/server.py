@@ -37,9 +37,12 @@ def update_odom_callback(msg):
 
 def color_filter(x):
   if x == 0:
-    return (240, 240, 240, 150)
+    #return (0xe8,0xcf,0xb7,0x0)
+    #return (240, 240, 240, 150)
+    return (204, 235, 250, 150)
   if x == 100:
     return (0, 0, 0, 255)
+  #return (0xe8-x/2, 0xcf-x/2, 0xb7-x/2, 255)
   return (204-x/2, 235-x/2, 250-x/2, 255)
 
 def map_callback(msg):

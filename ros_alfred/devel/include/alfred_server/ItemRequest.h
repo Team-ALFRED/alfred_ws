@@ -25,11 +25,13 @@ struct ItemRequest_
 
   ItemRequest_()
     : item()
-    , goal()  {
+    , goal()
+    , uid(0)  {
     }
   ItemRequest_(const ContainerAllocator& _alloc)
     : item(_alloc)
-    , goal(_alloc)  {
+    , goal(_alloc)
+    , uid(0)  {
     }
 
 
@@ -39,6 +41,9 @@ struct ItemRequest_
 
    typedef std::vector<double, typename ContainerAllocator::template rebind<double>::other >  _goal_type;
   _goal_type goal;
+
+   typedef uint32_t _uid_type;
+  _uid_type uid;
 
 
 
@@ -117,12 +122,12 @@ struct MD5Sum< ::alfred_server::ItemRequest_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "413cbcf9e0b6d8aab984d410322d8ad5";
+    return "d873a8a72ebd09beb386e3eb9ef262fb";
   }
 
   static const char* value(const ::alfred_server::ItemRequest_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x413cbcf9e0b6d8aaULL;
-  static const uint64_t static_value2 = 0xb984d410322d8ad5ULL;
+  static const uint64_t static_value1 = 0xd873a8a72ebd09beULL;
+  static const uint64_t static_value2 = 0xb386e3eb9ef262fbULL;
 };
 
 template<class ContainerAllocator>
@@ -143,6 +148,7 @@ struct Definition< ::alfred_server::ItemRequest_<ContainerAllocator> >
   {
     return "string item\n\
 float64[] goal\n\
+uint32 uid\n\
 ";
   }
 
@@ -163,6 +169,7 @@ namespace serialization
     {
       stream.next(m.item);
       stream.next(m.goal);
+      stream.next(m.uid);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER;
@@ -189,6 +196,8 @@ struct Printer< ::alfred_server::ItemRequest_<ContainerAllocator> >
       s << indent << "  goal[" << i << "]: ";
       Printer<double>::stream(s, indent + "  ", v.goal[i]);
     }
+    s << indent << "uid: ";
+    Printer<uint32_t>::stream(s, indent + "  ", v.uid);
   }
 };
 

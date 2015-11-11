@@ -61,8 +61,6 @@ class Idle(smach.State):
         smach.State.__init__(self, outcomes = ['set_goal', 'error'], output_keys = ['goal', 'item', 'uid'])
     def execute(self, ud):
         msg = fifo.get(block=True)
-        if random.randint(0, 20):
-          speak("twiddling my thumbs")
 
         ud.goal = msg.goal
         ud.item = msg.item
@@ -105,7 +103,7 @@ class Dispense(smach.State):
           pub.publish(res)
           return 'error'
 
-deliver_phrase = ["here's your {}... enjoy", "I have your {}", "here's your {}, you're looking lovely today", "ahem, I accept tips"]
+deliver_phrase = ["here's your {}... enjoy", "I have your {}", "here's your {}, you're looking lovely today", "I work for tips"]
 class Deliver(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes = ['goal_reached', 'error'], input_keys = ['goal', 'item', 'uid'])
@@ -113,8 +111,6 @@ class Deliver(smach.State):
         rospy.loginfo('[Deliver] goal:{}, uid:{}'.format(ud.goal, ud.uid))
 
         move(*ud.goal)
-        if random.randint(0, 20):
-          espeak("sir, the probablity of successfully delivering water... is three thousand seven hundred and twenty to one")
         msg = rospy.wait_for_message("/move_base/result", MoveBaseActionResult, timeout=MOVEMENT_TIMEOUT)
 
         if msg.status.status == 3:

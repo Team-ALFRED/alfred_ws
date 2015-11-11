@@ -46,26 +46,12 @@
 
 // include each device from a separate "Arduino library"
 #include "sonar.h"
-//#include "voltmeter.h"
-//#include "imu.h"                        // ignore IMU
 
 // Ugly hacks needed to circumvent Arduino build silliness:
 #include <NewPing.h>                    // to resolve sonar reference
-// ignore IMU for now
-//#include <Wire.h>                       // to resolve IMU references
-//#include "I2Cdev.h"
-//#include "MPU9150Lib.h"
-//#include "CalLib.h"
-//#include <dmpKey.h>
-//#include <dmpmap.h>
-//#include <inv_mpu.h>
-//#include <inv_mpu_dmp_motion_driver.h>
-//#include <EEPROM.h>
 
 // Number of devices with IMU:
-//#define N_DEVICES 3                   ///< number of devices to poll
-// without IMU:
-#define N_DEVICES 2                   ///< number of devices to poll
+#define N_DEVICES 1                   ///< number of devices to poll
 
 #define LED_PIN 13                    ///< pin with LED attached.
 #define POLL_INTERVAL 10              ///< poll interval in milliseconds
@@ -74,8 +60,7 @@ ArduinoDevice *devices[N_DEVICES];    ///< All the device handlers
 unsigned long poll_timer;             ///< time of next poll cycle
 
 /// Called once on start-up.
-void setup() 
-{
+void setup() {
   Serial.begin(115200);                 // serial port baud rate
   pinMode(LED_PIN, OUTPUT);             // configure LED output
 
@@ -84,25 +69,18 @@ void setup()
   poll_timer = millis() + 75;
 
   // allocate and initialize all attached devices
-  devices[0] = new Voltmeter();
-  devices[1] = new Sonar();
-  //devices[2] = new Imu();               // ignore IMU
+  devices[0] = new Sonar();
 }
 
 /// Called repeatedly in Arduino main loop, must complete in under 33ms.
-void loop()
-{
-  if (millis() >= poll_timer)      // time for next device poll cycle?
-    {
-      poll_timer += POLL_INTERVAL;
-      for (uint8_t dev = 0; dev < N_DEVICES; ++dev)
-        {
-          if (devices[dev]->check(POLL_INTERVAL))
-            {
-              // turn the LED on or off with each poll
-              digitalWrite(LED_PIN, !digitalRead(LED_PIN));
-              devices[dev]->poll();      // poll the device
-            }
-        }
+void loop() {
+  if (millis() >= poll_timer) {      // time for next device poll cycl
+    poll_timer += POLL_INTERVAL;
+    if (devices[0]->check(POLL_INTERVAL)) {
+      // turn the LED on or off with each poll
+      digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+      // poll the device
+      devices[0]->poll();      
     }
+  }
 }

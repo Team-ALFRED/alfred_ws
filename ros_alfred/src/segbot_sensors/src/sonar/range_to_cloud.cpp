@@ -66,7 +66,7 @@ namespace segbot_sensors
 
     // subscribe to input ranges
     ranges_ =
-      node.subscribe("sonar", 10,
+      node.subscribe("sonar", 100,
                      &RangeToCloud::processRange, (RangeToCloud *) this,
                      ros::TransportHints().tcpNoDelay(true));
   }

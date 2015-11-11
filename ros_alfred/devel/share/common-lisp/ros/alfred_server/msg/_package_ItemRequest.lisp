@@ -3,4 +3,6 @@
           ITEM
           GOAL-VAL
           GOAL
+          UID-VAL
+          UID
 ))

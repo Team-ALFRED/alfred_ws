@@ -3,5 +3,7 @@
   (:export
    "<ITEMREQUEST>"
    "ITEMREQUEST"
+   "<ITEMRESULT>"
+   "ITEMRESULT"
   ))
 

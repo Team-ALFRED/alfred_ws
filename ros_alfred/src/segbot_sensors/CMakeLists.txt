@@ -49,19 +49,9 @@ target_link_libraries(segbot_sensors_filters
   ${catkin_LIBRARIES}
 )
 
-add_executable(battery_diagnostics src/segbot_sensors/battery_diagnostics.cpp)
-target_link_libraries(battery_diagnostics ${catkin_LIBRARIES})
-
-add_executable(fake_volt_pub src/segbot_sensors/fake_volt_pub.cpp)
-target_link_libraries(fake_volt_pub ${catkin_LIBRARIES})
-
 # Install the plugin and the plugin description
 install (DIRECTORY include/segbot_sensors/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-
-install (TARGETS segbot_sensors_filters battery_diagnostics fake_volt_pub
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(FILES nodelets.xml segbot_sensors_plugins.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

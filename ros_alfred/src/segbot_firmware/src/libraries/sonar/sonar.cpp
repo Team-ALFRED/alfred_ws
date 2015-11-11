@@ -46,14 +46,14 @@
 #include <sonar.h>
 
 #define MAX_DISTANCE 200              ///< maximum distance to ping (cm)
-#define N_SONARS 3                    ///< number of sonars
+#define N_SONARS 1                    ///< number of sonars
 
 /** Each sonar with trigger pin, echo pin, and max distance. */
 static NewPing sonar[N_SONARS] =
   {
-    NewPing(30, 4, MAX_DISTANCE),
-    NewPing(28, 3, MAX_DISTANCE),
-    NewPing(26, 2, MAX_DISTANCE),
+    NewPing(A0, 22, MAX_DISTANCE),
+   // NewPing(28, 3, MAX_DISTANCE),
+   // NewPing(26, 2, MAX_DISTANCE), 
   };
 
 // These should be class variables, but they are static because the
@@ -75,6 +75,7 @@ void timer_event()
   if (sonar[static_current].check_timer())
     {
       static_distance = sonar[static_current].ping_result / US_ROUNDTRIP_CM;
+    Serial.println("*************************here"); 
     }
 }
 
@@ -95,7 +96,7 @@ void Sonar::poll(void)
       Serial.print(static_current);
       Serial.print("=");
       Serial.print(static_distance);
-      Serial.println("cm ");
+      Serial.println("cm "); 
     }
 
   // next sonar in the rotation

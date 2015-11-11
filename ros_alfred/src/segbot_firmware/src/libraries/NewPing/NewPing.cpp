@@ -108,7 +108,8 @@ boolean NewPing::ping_trigger() {
 // ---------------------------------------------------------------------------
 
 void NewPing::ping_timer(void (*userFunc)(void)) {
-	if (!ping_trigger()) return;         // Trigger a ping, if it returns false, return without starting the echo timer.
+	if (!ping_trigger())
+      return;         // Trigger a ping, if it returns false, return without starting the echo timer.
 	timer_us(ECHO_TIMER_FREQ, userFunc); // Set ping echo timer check every ECHO_TIMER_FREQ uS.
 }
 
@@ -133,7 +134,7 @@ boolean NewPing::check_timer() {
 // Timer2/Timer4 interrupt methods (can be used for non-ultrasonic needs)
 // ---------------------------------------------------------------------------
 
-// Variables used for timer functions
+// Variables used for timer functions
 void (*intFunc)();
 void (*intFunc2)();
 unsigned long _ms_cnt_reset;

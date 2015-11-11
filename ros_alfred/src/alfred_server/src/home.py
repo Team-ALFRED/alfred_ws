@@ -1,7 +1,6 @@
 #!/usr/bin/python
 from actionlib.action_client import *
 from move_base_msgs.msg import *
-import sys
 
 coords = [0.0, 0.0]
 if len(sys.argv) == 3:
