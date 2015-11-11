@@ -27,7 +27,8 @@ inventory = {}
 inventory.update(DEFAULT_INV)
 
 latest_data = [0 for i in range(1984 * 1984)]
-latest_map = Image.open(MAP_FILE)
+im = Image.open(MAP_FILE)
+latest_map = trim_map.trim(im)
 latest_odom = (0, 0, 0)
 
 def update_odom_callback(msg):
@@ -36,10 +37,10 @@ def update_odom_callback(msg):
 
 def color_filter(x):
   if x == 0:
-    return (240, 240, 240)
+    return (240, 240, 240, 150)
   if x == 100:
-    return (0, 0, 0)
-  return (204-x/2, 235-x/2, 250-x/2)
+    return (0, 0, 0, 255)
+  return (204-x/2, 235-x/2, 250-x/2, 255)
 
 def map_callback(msg):
     global latest_map
@@ -47,7 +48,7 @@ def map_callback(msg):
 
     width = int(math.sqrt(len(msg.data)))
     size = (width, width)
-    im = Image.new('RGB', size)
+    im = Image.new('RGBA', size)
     im.putdata([color_filter(x) for x in msg.data])
     latest_map = trim_map.trim(im)
     latest_data = np.reshape(msg.data, size)
