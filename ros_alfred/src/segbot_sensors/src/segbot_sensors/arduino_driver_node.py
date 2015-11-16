@@ -56,13 +56,13 @@ from .serial import ArduinoDevice
 
 class ArduinoDriver(object):
     """ ROS driver node for UTexas BWI segbot Arduino messages. """
-    def __init__(self, port='/dev/ttyACM1', baud=57600,
+    def __init__(self, port='/dev/ttyACM1', baud=115200,
                  node_name='arduino_driver'):
         rospy.init_node(node_name)
         port = rospy.get_param('~port', port)
         baud = rospy.get_param('~baud', baud)
 
-        self.diag = Diagnostics()
+        #self.diag = Diagnostics()
         """ Diagnostics collector and publisher. """
         self.status = DiagnosticStatus(name=node_name)
         """ Current diagnostic status for this driver. """
@@ -77,9 +77,7 @@ class ArduinoDriver(object):
         # define the known message types
         self.msgs = {}
         """ Dictionary of message types and handlers. """
-        #self.add('I', 'segbot_sensors.imu')
         self.add('S', 'segbot_sensors.sonar')
-        #self.add('V', 'segbot_sensors.voltmeter')
 
     def add(self, type_char, handler):
         """ Define another Arduino message.

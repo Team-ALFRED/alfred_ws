@@ -3,10 +3,28 @@ alias src='source ~/.bashrc'
 alias gvim="gvim 2>/dev/null"
 alias rm='rm -i'
 alias vi='gvim'
-alias ..='cd ../'
+alias ..=down_dir
 alias ..2='cd ../../'
 alias ..3='cd ../../../'
 alias ..4='cd ../../../../'
+down_dir () {
+  if [ "$1" == "" ]
+  then
+    cd ../
+  elif [ "$1" -eq 2 ]
+  then
+    cd ../../
+  elif [ "$1" -eq 3 ]
+  then
+    cd ../../../
+  elif [ "$1" -eq 4 ]
+  then
+    cd ../../../../
+  elif [ "$1" -eq 5../ ]
+  then
+    cd ../../../../../
+  fi 
+}
 
 alias alfred_ws='cd /home/avengineer/alfred_ws'
 alias alfred_src='cd /home/avengineer/alfred_ws/ros_alfred/src'

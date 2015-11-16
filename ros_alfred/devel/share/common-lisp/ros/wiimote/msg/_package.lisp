@@ -1,10 +1,10 @@
 (cl:defpackage wiimote-msg
   (:use )
   (:export
-   "<TIMEDSWITCH>"
-   "TIMEDSWITCH"
    "<STATE>"
    "STATE"
+   "<TIMEDSWITCH>"
+   "TIMEDSWITCH"
    "<IRSOURCEINFO>"
    "IRSOURCEINFO"
   ))
