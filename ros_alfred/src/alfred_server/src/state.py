@@ -11,6 +11,7 @@ import rospy
 import smach
 import smach_ros
 
+from threading import Lock, Thread
 from Queue import Queue
 import subprocess
 import random
@@ -21,6 +22,7 @@ ORIGIN = [-50, -50]
 MOVEMENT_TIMEOUT = 300
 
 fifo = Queue()
+lock = Lock()
 pub = None
 
 # /move_base/result
@@ -53,8 +55,18 @@ def move(x, y):
     ac.send_goal(goal)
     ac.wait_for_server()
 
+def tspeak(msg):
+    if lock.acquire(False):
+        rospy.loginfo('[Speech] Speaking: ' + msg)
+        p = subprocess.Popen(["espeak", "-s", "100", "-v", "mb-en1", msg])
+        p.communicate()
+        lock.release()
+    else:
+        rospy.loginfo('[Speech] Another thread has control of speech engine')
+
 def speak(msg):
-  subprocess.Popen(["espeak","-s","100","-v","mb-en1",msg])
+    speaker = Thread(target=tspeak, args=(msg,))
+    speaker.start()
 
 class Idle(smach.State):
     def __init__(self):
